@@ -1,0 +1,146 @@
+import Foundation
+import Combine
+
+/// Manages the Pomodoro timer state and logic
+@Observable
+class TimerManager {
+    // MARK: - Properties
+    
+    /// Current time remaining in seconds
+    var timeRemaining: TimeInterval
+    
+    /// Current session type
+    var currentSession: SessionType = .work
+    
+    /// Whether the timer is currently running
+    var isRunning: Bool = false
+    
+    /// Number of completed pomodoros in the current cycle
+    var completedPomodoros: Int = 0
+    
+    /// Total pomodoros before a long break
+    let pomodorosBeforeLongBreak: Int = 4
+    
+    // MARK: - Private Properties
+    
+    private var timer: Timer?
+    private var notificationManager = NotificationManager()
+    
+    // MARK: - Initialization
+    
+    init() {
+        self.timeRemaining = SessionType.work.duration
+    }
+    
+    // MARK: - Computed Properties
+    
+    /// Formatted time string (MM:SS)
+    var formattedTime: String {
+        let minutes = Int(timeRemaining) / 60
+        let seconds = Int(timeRemaining) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    /// Progress from 0.0 to 1.0
+    var progress: Double {
+        let total = currentSession.duration
+        return (total - timeRemaining) / total
+    }
+    
+    /// Menu bar display text
+    var menuBarTitle: String {
+        if isRunning {
+            return "\(currentSession.icon) \(formattedTime)"
+        } else {
+            return "🍅"
+        }
+    }
+    
+    // MARK: - Timer Controls
+    
+    /// Start or resume the timer
+    func start() {
+        guard !isRunning else { return }
+        isRunning = true
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.tick()
+        }
+    }
+    
+    /// Pause the timer
+    func pause() {
+        isRunning = false
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    /// Toggle between start and pause
+    func toggle() {
+        if isRunning {
+            pause()
+        } else {
+            start()
+        }
+    }
+    
+    /// Reset the current session
+    func reset() {
+        pause()
+        timeRemaining = currentSession.duration
+    }
+    
+    /// Skip to the next session
+    func skip() {
+        pause()
+        moveToNextSession()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func tick() {
+        if timeRemaining > 0 {
+            timeRemaining -= 1
+        } else {
+            sessionCompleted()
+        }
+    }
+    
+    private func sessionCompleted() {
+        pause()
+        
+        // Send notification
+        notificationManager.sendSessionCompleteNotification(session: currentSession)
+        
+        // Update completed pomodoros if work session finished
+        if currentSession == .work {
+            completedPomodoros += 1
+        }
+        
+        moveToNextSession()
+    }
+    
+    private func moveToNextSession() {
+        switch currentSession {
+        case .work:
+            // Check if it's time for a long break
+            if completedPomodoros > 0 && completedPomodoros % pomodorosBeforeLongBreak == 0 {
+                currentSession = .longBreak
+            } else {
+                currentSession = .shortBreak
+            }
+        case .shortBreak, .longBreak:
+            currentSession = .work
+        }
+        
+        timeRemaining = currentSession.duration
+    }
+    
+    /// Reset everything to initial state
+    func resetAll() {
+        pause()
+        completedPomodoros = 0
+        currentSession = .work
+        timeRemaining = currentSession.duration
+    }
+}
