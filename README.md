@@ -9,9 +9,7 @@ A minimal, beautiful Pomodoro timer that lives in your macOS menu bar.
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/main-view.png" alt="Timer View" width="220">
-  &nbsp;&nbsp;&nbsp;
-  <img src="screenshots/settings-view.png" alt="Settings View" width="180">
+  <img src="screenshots/in-app.jpeg" alt="Pomodoro App" width="500">
 </p>
 
 ## Features
