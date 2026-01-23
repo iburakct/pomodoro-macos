@@ -10,9 +10,10 @@ A minimal, beautiful Pomodoro timer that lives in your macOS menu bar.
 
 - 🍅 **Menu Bar App** - Lives in your menu bar, out of the way
 - ⏱️ **Classic Pomodoro** - 25-min work, 5-min short break, 15-min long break
-- � **Auto-Mode** - Optionally auto-start the next session for deep focus
+- ⚙️ **Configurable Timers** - Customize work and break durations to your preference
+- 🔄 **Auto-Mode** - Optionally auto-start the next session for deep focus
 - ⏳ **Countdown Overlay** - Subtle 5-second fullscreen countdown to help transitions
-- �🔔 **Notifications** - Get notified when sessions complete
+- 🔔 **Notifications** - Get notified when sessions complete
 - 📊 **Session Counter** - Track completed pomodoros
 - 🎨 **Progress Ring** - Visual circular progress indicator
 
