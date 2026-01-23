@@ -6,6 +6,14 @@ A minimal, beautiful Pomodoro timer that lives in your macOS menu bar.
 ![Swift](https://img.shields.io/badge/Swift-5.0-orange)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-✓-green)
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/main-view.png" alt="Timer View" width="220">
+  &nbsp;&nbsp;&nbsp;
+  <img src="screenshots/settings-view.png" alt="Settings View" width="180">
+</p>
+
 ## Features
 
 - 🍅 **Menu Bar App** - Lives in your menu bar, out of the way
