@@ -24,9 +24,9 @@ class TimerManager {
     /// Auto-mode: automatically start next session
     var isAutoMode: Bool = false
     
-    /// Whether to show the countdown overlay (last 3 seconds)
+    /// Whether to show the countdown overlay (last 5 seconds)
     var showCountdownOverlay: Bool {
-        return isRunning && timeRemaining <= 3 && timeRemaining > 0
+        return isRunning && timeRemaining <= 5 && timeRemaining > 0
     }
     
     /// Current countdown number for overlay (3, 2, or 1)
