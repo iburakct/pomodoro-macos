@@ -10,7 +10,9 @@ A minimal, beautiful Pomodoro timer that lives in your macOS menu bar.
 
 - 🍅 **Menu Bar App** - Lives in your menu bar, out of the way
 - ⏱️ **Classic Pomodoro** - 25-min work, 5-min short break, 15-min long break
-- 🔔 **Notifications** - Get notified when sessions complete
+- � **Auto-Mode** - Optionally auto-start the next session for deep focus
+- ⏳ **Countdown Overlay** - Subtle 5-second fullscreen countdown to help transitions
+- �🔔 **Notifications** - Get notified when sessions complete
 - 📊 **Session Counter** - Track completed pomodoros
 - 🎨 **Progress Ring** - Visual circular progress indicator
 
@@ -45,10 +47,21 @@ Then press **⌘R** to build and run.
 
 1. Click the 🍅 icon in your menu bar
 2. Press **Play** to start a 25-minute work session
-3. When complete, you'll get a notification
-4. Take your break, then repeat!
+3. Toggle **Auto-start next session** if you want seamless transitions
+4. When complete, you'll get a notification and a subtle fullscreen countdown
+5. Take your break, then repeat!
 
 After 4 pomodoros, you get a 15-minute long break.
+
+## Troubleshooting
+
+### Clearing Spotlight Cache
+
+If you still see old icons or older versions of the app in Spotlight after an update, run this command to refresh the macOS Launch Services database:
+
+```bash
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Spotlight
+```
 
 ## Requirements
 
