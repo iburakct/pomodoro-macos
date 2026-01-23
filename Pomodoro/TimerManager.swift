@@ -38,11 +38,13 @@ class TimerManager {
     
     private var timer: Timer?
     private var notificationManager = NotificationManager()
+    private let settings: SettingsManager
     
     // MARK: - Initialization
     
-    init() {
-        self.timeRemaining = SessionType.work.duration
+    init(settings: SettingsManager) {
+        self.settings = settings
+        self.timeRemaining = settings.duration(for: .work)
     }
     
     // MARK: - Computed Properties
@@ -56,7 +58,7 @@ class TimerManager {
     
     /// Progress from 0.0 to 1.0
     var progress: Double {
-        let total = currentSession.duration
+        let total = settings.duration(for: currentSession)
         return (total - timeRemaining) / total
     }
     
@@ -100,13 +102,20 @@ class TimerManager {
     /// Reset the current session
     func reset() {
         pause()
-        timeRemaining = currentSession.duration
+        timeRemaining = settings.duration(for: currentSession)
     }
     
     /// Skip to the next session
     func skip() {
         pause()
         moveToNextSession()
+    }
+    
+    /// Refresh duration from settings (call when settings change)
+    func refreshDuration() {
+        if !isRunning {
+            timeRemaining = settings.duration(for: currentSession)
+        }
     }
     
     // MARK: - Private Methods
@@ -151,7 +160,7 @@ class TimerManager {
             currentSession = .work
         }
         
-        timeRemaining = currentSession.duration
+        timeRemaining = settings.duration(for: currentSession)
     }
     
     /// Reset everything to initial state
@@ -159,6 +168,6 @@ class TimerManager {
         pause()
         completedPomodoros = 0
         currentSession = .work
-        timeRemaining = currentSession.duration
+        timeRemaining = settings.duration(for: currentSession)
     }
 }

@@ -3,13 +3,20 @@ import Combine
 
 @main
 struct PomodoroApp: App {
-    @State private var timerManager = TimerManager()
+    @State private var settingsManager = SettingsManager()
+    @State private var timerManager: TimerManager
     @State private var overlayWindow = CountdownOverlayWindow()
     @State private var cancellable: AnyCancellable?
     
+    init() {
+        let settings = SettingsManager()
+        _settingsManager = State(initialValue: settings)
+        _timerManager = State(initialValue: TimerManager(settings: settings))
+    }
+    
     var body: some Scene {
         MenuBarExtra {
-            ContentView(timerManager: timerManager)
+            ContentView(timerManager: timerManager, settings: settingsManager)
                 .onAppear {
                     setupOverlayObserver()
                 }

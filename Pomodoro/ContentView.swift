@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ContentView: View {
     @Bindable var timerManager: TimerManager
+    @Bindable var settings: SettingsManager
+    @State private var showSettings = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -12,6 +14,21 @@ struct ContentView: View {
                     .foregroundStyle(.secondary)
                 
                 Spacer()
+                
+                // Settings button
+                Button {
+                    showSettings.toggle()
+                } label: {
+                    Image(systemName: "gearshape")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .help("Settings")
+                .popover(isPresented: $showSettings) {
+                    SettingsView(settings: settings) {
+                        timerManager.refreshDuration()
+                    }
+                }
                 
                 // Reset all button
                 Button {
@@ -154,5 +171,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(timerManager: TimerManager())
+    ContentView(timerManager: TimerManager(settings: SettingsManager()), settings: SettingsManager())
 }
