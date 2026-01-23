@@ -117,6 +117,18 @@ struct ContentView: View {
                     .foregroundStyle(.tertiary)
             }
             
+            // Auto-mode toggle
+            Toggle(isOn: $timerManager.isAutoMode) {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.caption)
+                    Text("Auto-start next session")
+                        .font(.caption)
+                }
+                .foregroundStyle(.secondary)
+            }
+            .toggleStyle(.checkbox)
+            
             // Quit button
             Button("Quit") {
                 NSApplication.shared.terminate(nil)

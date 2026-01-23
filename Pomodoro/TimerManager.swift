@@ -21,6 +21,19 @@ class TimerManager {
     /// Total pomodoros before a long break
     let pomodorosBeforeLongBreak: Int = 4
     
+    /// Auto-mode: automatically start next session
+    var isAutoMode: Bool = false
+    
+    /// Whether to show the countdown overlay (last 3 seconds)
+    var showCountdownOverlay: Bool {
+        return isRunning && timeRemaining <= 3 && timeRemaining > 0
+    }
+    
+    /// Current countdown number for overlay (3, 2, or 1)
+    var countdownNumber: Int {
+        return Int(ceil(timeRemaining))
+    }
+    
     // MARK: - Private Properties
     
     private var timer: Timer?
@@ -118,6 +131,11 @@ class TimerManager {
         }
         
         moveToNextSession()
+        
+        // Auto-start next session if enabled
+        if isAutoMode {
+            start()
+        }
     }
     
     private func moveToNextSession() {
