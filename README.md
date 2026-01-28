@@ -60,16 +60,6 @@ Then press **⌘R** to build and run.
 
 After 4 pomodoros, you get a 15-minute long break.
 
-## Troubleshooting
-
-### Clearing Spotlight Cache
-
-If you still see old icons or older versions of the app in Spotlight after an update, run this command to refresh the macOS Launch Services database:
-
-```bash
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Spotlight
-```
-
 ## Requirements
 
 - macOS 14.0 (Sonoma) or later
