@@ -15,30 +15,24 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                // Settings button
-                Button {
-                    showSettings.toggle()
-                } label: {
+                HStack(spacing: 12) {
+                    // Settings button
                     Image(systemName: "gearshape")
                         .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-                .help("Settings")
-                .popover(isPresented: $showSettings) {
-                    SettingsView(settings: settings) {
-                        timerManager.refreshDuration()
-                    }
-                }
-                
-                // Reset all button
-                Button {
-                    timerManager.resetAll()
-                } label: {
+                        .modifier(IconPressAction(action: { showSettings.toggle() }))
+                        .help("Settings")
+                        .popover(isPresented: $showSettings) {
+                            SettingsView(settings: settings) {
+                                timerManager.refreshDuration()
+                            }
+                        }
+                    
+                    // Reset all button
                     Image(systemName: "arrow.counterclockwise")
                         .foregroundStyle(.secondary)
+                        .modifier(IconPressAction(action: { timerManager.resetAll() }))
+                        .help("Reset all")
                 }
-                .buttonStyle(.plain)
-                .help("Reset all")
             }
             
             Divider()
@@ -74,41 +68,32 @@ struct ContentView: View {
             // Control Buttons
             HStack(spacing: 16) {
                 // Reset button
-                Button {
-                    timerManager.reset()
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.title2)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .background(.quaternary, in: Circle())
-                .help("Reset timer")
+                CircleButton(
+                    icon: "arrow.counterclockwise",
+                    size: 44,
+                    color: .quaternary,
+                    action: { timerManager.reset() },
+                    help: "Reset timer"
+                )
                 
                 // Play/Pause button
-                Button {
-                    timerManager.toggle()
-                } label: {
-                    Image(systemName: timerManager.isRunning ? "pause.fill" : "play.fill")
-                        .font(.title)
-                        .frame(width: 56, height: 56)
-                        .foregroundStyle(.white)
-                }
-                .buttonStyle(.plain)
-                .background(sessionColor, in: Circle())
-                .help(timerManager.isRunning ? "Pause" : "Start")
+                CircleButton(
+                    icon: timerManager.isRunning ? "pause.fill" : "play.fill",
+                    size: 56,
+                    color: AnyShapeStyle(sessionColor),
+                    iconColor: .white,
+                    action: { timerManager.toggle() },
+                    help: timerManager.isRunning ? "Pause" : "Start"
+                )
                 
                 // Skip button
-                Button {
-                    timerManager.skip()
-                } label: {
-                    Image(systemName: "forward.fill")
-                        .font(.title2)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .background(.quaternary, in: Circle())
-                .help("Skip to next session")
+                CircleButton(
+                    icon: "forward.fill",
+                    size: 44,
+                    color: .quaternary,
+                    action: { timerManager.skip() },
+                    help: "Skip to next session"
+                )
             }
             
             Divider()
@@ -145,6 +130,9 @@ struct ContentView: View {
                 .foregroundStyle(.secondary)
             }
             .toggleStyle(.checkbox)
+            .onHover { hovering in
+                if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+            }
             
             // Quit button
             Button("Quit") {
@@ -153,6 +141,9 @@ struct ContentView: View {
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
             .font(.caption)
+            .onHover { hovering in
+                if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+            }
         }
         .padding(20)
         .frame(width: 240)
@@ -172,4 +163,85 @@ struct ContentView: View {
 
 #Preview {
     ContentView(timerManager: TimerManager(settings: SettingsManager()), settings: SettingsManager())
+}
+
+// MARK: - Press Action Modifier (For buttons with existing background)
+struct PressAction: ViewModifier {
+    let action: () -> Void
+    @State private var isPressed = false
+    
+    func body(content: Content) -> some View {
+        content
+            .brightness(isPressed ? 0.3 : 0)
+            .animation(.easeOut(duration: 0.1), value: isPressed)
+            .onTapGesture {
+                isPressed = true
+                action()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isPressed = false
+                }
+            }
+            .onHover { hovering in
+                if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+            }
+    }
+}
+
+// MARK: - Icon Press Action Modifier (For icon-only buttons)
+struct IconPressAction: ViewModifier {
+    let action: () -> Void
+    @State private var isPressed = false
+    
+    func body(content: Content) -> some View {
+        content
+            .background {
+                Circle()
+                    .fill(.quaternary)
+                    .opacity(isPressed ? 1 : 0)
+            }
+            .contentShape(Circle())
+            .animation(.easeOut(duration: 0.1), value: isPressed)
+            .onTapGesture {
+                isPressed = true
+                action()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isPressed = false
+                }
+            }
+            .onHover { hovering in
+                if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+            }
+    }
+}
+
+// MARK: - Circle Button Component
+struct CircleButton: View {
+    let icon: String
+    let size: CGFloat
+    let color: AnyShapeStyle
+    var iconColor: Color = .primary
+    let action: () -> Void
+    let help: String
+    
+    init(icon: String, size: CGFloat, color: some ShapeStyle, iconColor: Color = .primary, action: @escaping () -> Void, help: String) {
+        self.icon = icon
+        self.size = size
+        self.color = AnyShapeStyle(color)
+        self.iconColor = iconColor
+        self.action = action
+        self.help = help
+    }
+    
+    var body: some View {
+        Circle()
+            .fill(color)
+            .frame(width: size, height: size)
+            .overlay {
+                Image(systemName: icon)
+                    .font(size > 50 ? .title : .title2)
+                    .foregroundStyle(iconColor)
+            }
+            .modifier(PressAction(action: action))
+            .help(help)
+    }
 }
