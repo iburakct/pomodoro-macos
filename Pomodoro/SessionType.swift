@@ -18,7 +18,7 @@ enum SessionType: String, CaseIterable {
         }
     }
     
-    /// Icon for each session type
+    /// Icon for each session type (used in UI and notifications)
     var icon: String {
         switch self {
         case .work:

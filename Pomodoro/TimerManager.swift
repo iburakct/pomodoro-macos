@@ -67,7 +67,7 @@ class TimerManager {
         if isRunning {
             return "\(currentSession.icon) \(formattedTime)"
         } else {
-            return "🍅"
+            return "\(currentSession.icon)"
         }
     }
     

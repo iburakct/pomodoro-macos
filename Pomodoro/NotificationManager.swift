@@ -23,15 +23,15 @@ class NotificationManager {
         
         switch session {
         case .work:
-            content.title = "Work Session Complete! 🍅"
+            content.title = "Work Session Complete! \(session.icon)"
             content.body = "Great job! Time for a break."
             content.sound = .default
         case .shortBreak:
-            content.title = "Break's Over! ☕️"
+            content.title = "Break's Over! \(session.icon)"
             content.body = "Ready to focus again?"
             content.sound = .default
         case .longBreak:
-            content.title = "Long Break Complete! 🌴"
+            content.title = "Long Break Complete! \(session.icon)"
             content.body = "Feeling refreshed? Let's get back to work!"
             content.sound = .default
         }
