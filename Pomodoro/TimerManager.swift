@@ -108,6 +108,9 @@ class TimerManager {
     /// Skip to the next session
     func skip() {
         pause()
+        if currentSession == .work {
+            completedPomodoros += 1
+        }
         moveToNextSession()
     }
     

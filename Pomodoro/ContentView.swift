@@ -99,7 +99,7 @@ struct ContentView: View {
             Divider()
             
             // Session Counter
-            HStack {
+            HStack(alignment: .firstTextBaseline) {
                 Text("Completed:")
                     .foregroundStyle(.secondary)
                 
@@ -107,15 +107,16 @@ struct ContentView: View {
                     ForEach(0..<4, id: \.self) { index in
                         let cycleCount = timerManager.completedPomodoros % 4
                         let isFilled = index < cycleCount || (cycleCount == 0 && timerManager.completedPomodoros > 0 && index < 4)
-                        Text(isFilled && !(cycleCount == 0 && timerManager.completedPomodoros == 0) ? "🍅" : "○")
-                            .font(.system(size: 14))
+                        Image(systemName: isFilled ? "circle.fill" : "circle")
+                            .foregroundStyle(isFilled ? .primary : .quaternary)
+                            .font(.system(size: 11))
                     }
                 }
                 
                 Spacer()
                 
                 Text("\(timerManager.completedPomodoros) total")
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(.tertiary)
             }
             

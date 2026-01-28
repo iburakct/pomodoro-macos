@@ -54,6 +54,9 @@ struct SettingsView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
+            .onHover { hovering in
+                if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+            }
         }
         .padding(16)
         .frame(width: 220)
@@ -86,6 +89,9 @@ struct DurationRow: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(value <= range.lowerBound)
+                .onHover { hovering in
+                    if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+                }
                 
                 Text("\(value) min")
                     .font(.system(.body, design: .monospaced))
@@ -101,6 +107,9 @@ struct DurationRow: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(value >= range.upperBound)
+                .onHover { hovering in
+                    if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+                }
             }
         }
     }
