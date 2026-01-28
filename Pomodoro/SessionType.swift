@@ -30,15 +30,4 @@ enum SessionType: String, CaseIterable {
         }
     }
     
-    /// Color name for each session type
-    var colorName: String {
-        switch self {
-        case .work:
-            return "tomato"
-        case .shortBreak:
-            return "mint"
-        case .longBreak:
-            return "ocean"
-        }
-    }
-}
+
